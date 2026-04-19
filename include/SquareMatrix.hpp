@@ -155,8 +155,6 @@ public:
         return result;
     }
 
-
-
     // operators
     SquareMatrix<T> operator+(const SquareMatrix<T>& other) const {
         return Add(other);
@@ -186,7 +184,6 @@ public:
 
 
     // elementary transformations
-
     void MultiplyRow(size_t row, const T& scalar) {
         if (row >= size)
             throw std::out_of_range("Index out of range");
@@ -226,8 +223,6 @@ public:
             Set(i, target, value);
         }
     }
-
-
 
 };
 

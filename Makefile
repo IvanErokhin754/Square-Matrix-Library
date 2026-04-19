@@ -2,7 +2,7 @@ CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -Iinclude
 SANITIZE_FLAGS = -fsanitize=address -g
 
-SRC = src/main.cpp
+SRC = src/main.cpp src/UI.cpp
 APP = app
 
 TEST_SRC = \
