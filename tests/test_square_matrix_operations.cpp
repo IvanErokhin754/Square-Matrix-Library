@@ -179,3 +179,51 @@ TEST(SquareMatrixTest, TransposeTwiceReturnsOriginal) {
     EXPECT_TRUE(matrix == result);
 }
 
+TEST(SquareMatrixTest, MapWorksCorrectly) {
+    SquareMatrix<int> matrix(2, 0);
+
+    matrix.Set(0, 0, 1);
+    matrix.Set(0, 1, 2);
+    matrix.Set(1, 0, 3);
+    matrix.Set(1, 1, 4);
+
+    SquareMatrix<int> result = matrix.Map([](int x) {
+        return x * 2;
+    });
+
+    EXPECT_EQ(result.Get(0, 0), 2);
+    EXPECT_EQ(result.Get(0, 1), 4);
+    EXPECT_EQ(result.Get(1, 0), 6);
+    EXPECT_EQ(result.Get(1, 1), 8);
+}
+
+TEST(SquareMatrixTest, ReduceWorksCorrectly) {
+    SquareMatrix<int> matrix(2, 0);
+
+    matrix.Set(0, 0, 1);
+    matrix.Set(0, 1, 2);
+    matrix.Set(1, 0, 3);
+    matrix.Set(1, 1, 4);
+
+    int sum = matrix.Reduce([](int acc, int value) {
+        return acc + value;
+    }, 0);
+
+    EXPECT_EQ(sum, 10);
+}
+
+TEST(SquareMatrixTest, IteratorWorksCorrectly) {
+    SquareMatrix<int> matrix(2, 0);
+
+    matrix.Set(0, 0, 1);
+    matrix.Set(0, 1, 2);
+    matrix.Set(1, 0, 3);
+    matrix.Set(1, 1, 4);
+
+    int sum = 0;
+    for (const auto& value : matrix) {
+        sum += value;
+    }
+
+    EXPECT_EQ(sum, 10);
+}

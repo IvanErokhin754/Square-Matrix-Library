@@ -16,6 +16,14 @@ public:
     MutableArraySequence(const DynamicArray<T>& other) : ArraySequence<T>(other) {}
     MutableArraySequence(const MutableArraySequence<T>& other) : ArraySequence<T>(other) {}
 
+    MutableArraySequence<T>& operator=(const MutableArraySequence<T>& other) {
+        if (this == &other)
+            return *this;
+
+        ArraySequence<T>::operator=(other);
+        return *this;
+    }
+
     T& operator[](size_t index) {
         return this->array[index];
     }

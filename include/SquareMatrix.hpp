@@ -11,38 +11,30 @@ template <typename T>
 class SquareMatrix {
 private:
     size_t size;
-    MutableArraySequence<T>* data;
+    MutableArraySequence<T> data;
+
     size_t Index(size_t i, size_t j) const {
         return i * size + j;
     }
 
 public:
-    SquareMatrix() : size(0), data(nullptr) {}
-    SquareMatrix(size_t n, const T& default_value = T()) : size(n), data(new MutableArraySequence<T> ()) {
+    SquareMatrix() : size(0), data() {}
+    SquareMatrix(size_t n, const T& default_value = T()) : size(n), data() {
         for (size_t i = 0; i < size * size; i++) {
-            data->Append(default_value);
+            data.Append(default_value);
         }
     }
-    SquareMatrix(const SquareMatrix<T>& other) {
-        size = other.size;
-        data = new MutableArraySequence<T>(*other.data);
-    }
-    ~SquareMatrix() {
-        delete data;
-        data = nullptr;
-    }
+    SquareMatrix(const SquareMatrix<T>& other) : size(other.size), data(other.data) {}
 
     SquareMatrix<T>& operator=(const SquareMatrix<T>& other) {
         if (this == &other)
             return *this; 
-        
-        delete data;
 
         size = other.size;
-        data = new MutableArraySequence<T>(*other.data);
-
+        data = other.data;
         return *this;
     }
+
     size_t GetSize() const {
         return size;
     }
@@ -51,14 +43,14 @@ public:
         if (i >= size || j >= size)
             throw std::out_of_range("Index out of range");
 
-        return data->Get(Index(i, j));
+        return data.Get(Index(i, j));
     }
 
     void Set(size_t i, size_t j, const T& value) {
         if (i >= size || j >= size)
             throw std::out_of_range("Index out of range");
         
-        data->Set(Index(i, j), value);
+        data.Set(Index(i, j), value);
     }  
     
     SquareMatrix<T> Add(const SquareMatrix<T>& other) const {
@@ -75,6 +67,7 @@ public:
 
         return result;
     }
+
     SquareMatrix<T> MultiplyByScalar(const T& scalar) const {
         SquareMatrix<T> result(size);
 
@@ -86,6 +79,7 @@ public:
 
         return result;
     }
+
     SquareMatrix<T> Multiply(const SquareMatrix<T>& other) const {
         if (size != other.size)
             throw std::invalid_argument("Matrix sizes must match");
@@ -104,6 +98,7 @@ public:
 
         return result;
     }
+
     void SwapRows(size_t row1, size_t row2) {
         if (row1 == row2)
             return;
@@ -224,6 +219,46 @@ public:
         }
     }
 
+    template<typename Func>
+    SquareMatrix<T> Map(Func func) const {
+        SquareMatrix<T> result(size, T());
+
+        for (size_t i = 0; i < size; i++) {
+            for (size_t j = 0; j < size; j++) {
+                result.Set(i, j, func(Get(i, j)));
+            }
+        }
+
+        return result;
+    }
+
+    template<typename Func>
+    T Reduce(Func func, T initial) const {
+        T result = initial;
+
+        for (size_t i = 0; i < size; i++) {
+            for (size_t j = 0; j < size; j++) {
+                result = func(result, Get(i, j));
+            }
+        }
+        return result;
+    }
+
+    auto begin() {
+        return data.begin();
+    }
+
+    auto end() {
+        return data.end();
+    }
+
+    auto begin() const {
+        return data.begin();
+    }
+
+    auto end() const {
+        return data.end();
+    }
 };
 
 #endif /* SQUARE_MATRIX_HPP */

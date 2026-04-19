@@ -77,6 +77,14 @@ public:
     ArraySequence(const DynamicArray<T> &other) : array(other) {}
     ArraySequence(const ArraySequence<T> &other) : array(other.array) {} 
     
+    ArraySequence<T>& operator=(const ArraySequence<T>& other) {
+        if (this == &other)
+            return *this;
+        
+        array = other.array;
+        return *this;
+    }
+
     Iterator begin() const {
         return Iterator(this, 0);
     }

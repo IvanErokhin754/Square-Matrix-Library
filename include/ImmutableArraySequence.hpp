@@ -16,6 +16,14 @@ public:
     ImmutableArraySequence(const DynamicArray<T>& other) : ArraySequence<T>(other) {}
     ImmutableArraySequence(const ImmutableArraySequence<T>& other) : ArraySequence<T>(other) {}
 
+    ImmutableArraySequence<T>& operator=(const ImmutableArraySequence<T>& other) {
+        if (this == &other)
+            return *this;
+
+        ArraySequence<T>::operator=(other);
+        return *this;
+    }
+
     const T& operator[](size_t index) const {
         return this->Get(index);
     }
