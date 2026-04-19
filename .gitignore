@@ -1,3 +1,4 @@
 .DS_Store
 tests_run
 .vscode
+tests_run.dSYM
