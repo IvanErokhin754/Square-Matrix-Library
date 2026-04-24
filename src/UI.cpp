@@ -283,7 +283,7 @@ void StartUi() {
                     size_t col1 = ReadIndex("Enter first column index: ");
                     size_t col2 = ReadIndex("Enter second column index: ");
                     matrixA.SwapColumns(col1, col2);
-                    std::cout << "Columns swapped. Matrix A:\n";
+                    std::cout << "Columns swapped. Matrix A:\n"; 
                     PrintMatrix(matrixA);
                     break;
                 }

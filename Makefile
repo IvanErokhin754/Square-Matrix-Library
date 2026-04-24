@@ -8,7 +8,8 @@ APP = app
 TEST_SRC = \
 	tests/test_square_matrix_core.cpp \
 	tests/test_square_matrix_operations.cpp \
-	tests/test_square_matrix_transformations.cpp
+	tests/test_square_matrix_transformations.cpp \
+	tests/test_solvers.cpp
 
 TEST_BIN = tests_run
 

@@ -17,6 +17,11 @@ private:
         return i * size + j;
     }
 
+    void CheckBounds(size_t i, size_t j) const {
+        if (i >= size || j >= size)
+            throw std::out_of_range("Index out of range");
+    }
+
 public:
     SquareMatrix() : size(0), data() {}
     SquareMatrix(size_t n, const T& default_value = T()) : size(n), data() {
@@ -39,18 +44,49 @@ public:
         return size;
     }
     
-    const T& Get(size_t i, size_t j) const {
-        if (i >= size || j >= size)
-            throw std::out_of_range("Index out of range");
 
-        return data.Get(Index(i, j));
+    SquareMatrix<T> operator+(const SquareMatrix<T>& other) const {
+        return Add(other);
+    }
+
+    SquareMatrix<T> operator*(const T& scalar) const {
+        return MultiplyByScalar(scalar);
+    }
+
+    bool operator==(const SquareMatrix<T>& other) const {
+        if (size != other.size)
+            return false;
+        
+        for (size_t i = 0; i < size; i++) {
+            for (size_t j = 0; j < size; j++) {
+                if (Get(i, j) != other.Get(i, j))
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
+    bool operator!=(const SquareMatrix<T>& other) const {
+        return !(*this == other);
+    }
+
+    T& operator()(size_t i, size_t j) {
+        CheckBounds(i, j);
+        return data[Index(i, j)];
+    }
+
+    const T& operator()(size_t i, size_t j) const {
+        CheckBounds(i, j);
+        return data[Index(i, j)];
+    }
+
+    const T& Get(size_t i, size_t j) const {
+        return (*this)(i, j);
     }
 
     void Set(size_t i, size_t j, const T& value) {
-        if (i >= size || j >= size)
-            throw std::out_of_range("Index out of range");
-        
-        data.Set(Index(i, j), value);
+        (*this)(i, j) = value;
     }  
     
     SquareMatrix<T> Add(const SquareMatrix<T>& other) const {
@@ -150,35 +186,22 @@ public:
         return result;
     }
 
-    // operators
-    SquareMatrix<T> operator+(const SquareMatrix<T>& other) const {
-        return Add(other);
-    }
+    double ResidualNorm(const SquareMatrix<double>& A, const MutableArraySequence<double>& x, const MutableArraySequence<double>& b) {
+        size_t n = A.GetSize();
+        double norm = 0.0;
 
-    SquareMatrix<T> operator*(const T& scalar) const {
-        return MultiplyByScalar(scalar);
-    }
-
-    bool operator==(const SquareMatrix<T>& other) const {
-        if (size != other.size)
-            return false;
-        
-        for (size_t i = 0; i < size; i++) {
-            for (size_t j = 0; j < size; j++) {
-                if (Get(i, j) != other.Get(i, j))
-                    return false;
+        for (size_t i = 0; i < n; i++) {
+            double sum = 0.0;
+            for (size_t j = 0; j < n; j++) {
+                sum += A(i, j) * x[j];
             }
+            double diff = sum - b[i];
+            norm += diff * diff;
         }
 
-        return true;
+        return std::sqrt(norm);
     }
-
-    bool operator!=(const SquareMatrix<T>& other) const {
-        return !(*this == other);
-    }
-
-
-    // elementary transformations
+    
     void MultiplyRow(size_t row, const T& scalar) {
         if (row >= size)
             throw std::out_of_range("Index out of range");
@@ -243,7 +266,8 @@ public:
         }
         return result;
     }
-
+ 
+    //iterator
     auto begin() {
         return data.begin();
     }
