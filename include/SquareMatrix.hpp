@@ -44,7 +44,6 @@ public:
         return size;
     }
     
-
     SquareMatrix<T> operator+(const SquareMatrix<T>& other) const {
         return Add(other);
     }
@@ -138,8 +137,7 @@ public:
     void SwapRows(size_t row1, size_t row2) {
         if (row1 == row2)
             return;
-        if (row1 >= size || row2 >= size)
-            throw std::out_of_range("Index out of range");
+        CheckBounds(row1, row2);
         
         for (size_t j = 0; j < size; j++) {
             T temp = Get(row1, j);
@@ -151,8 +149,7 @@ public:
     void SwapColumns(size_t column1, size_t column2) {
         if (column1 == column2)
             return;
-        if (column1 >= size || column2 >= size)
-            throw std::out_of_range("Index out of range");
+        CheckBounds(column1, column2);
         
         for (size_t i = 0; i < size; i++) {
             T temp = Get(i, column1);
@@ -184,22 +181,6 @@ public:
         }
 
         return result;
-    }
-
-    double ResidualNorm(const SquareMatrix<double>& A, const MutableArraySequence<double>& x, const MutableArraySequence<double>& b) {
-        size_t n = A.GetSize();
-        double norm = 0.0;
-
-        for (size_t i = 0; i < n; i++) {
-            double sum = 0.0;
-            for (size_t j = 0; j < n; j++) {
-                sum += A(i, j) * x[j];
-            }
-            double diff = sum - b[i];
-            norm += diff * diff;
-        }
-
-        return std::sqrt(norm);
     }
     
     void MultiplyRow(size_t row, const T& scalar) {

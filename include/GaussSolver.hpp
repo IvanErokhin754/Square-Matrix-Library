@@ -4,42 +4,10 @@
 #include <cmath>
 #include <stdexcept>
 #include "LinearSystemSolver.hpp"
+#include "Utility.hpp"
 
 template<typename T>
 class GaussSolver : public LinearSystemSolver<T> {
-private:
-    static constexpr double eps = 1e-12;
-    MutableArraySequence<T> BackSubstitution(const SquareMatrix<T>& U, const MutableArraySequence<T>& b) const {
-        size_t n = U.GetSize();
-        if (n == 0)
-            throw std::invalid_argument("Matrix must not be empty");
-
-        if (b.GetLength() != n)
-            throw std::invalid_argument("Wrong right-hand side size");
-        
-        MutableArraySequence<T> x;
-        for (size_t i = 0; i < n; i++) {
-            x.Append(T());
-        } 
-
-        for (int i = static_cast<int>(n) - 1; i >= 0; i--) {
-            T sum = T();
-
-            for (size_t j = i + 1; j < n; j++) {
-                sum += U(i, j) * x[j];
-            }
-
-            T diag = U(i, i);
-
-            if (std::fabs(static_cast<double>(diag)) < eps)
-                throw std::runtime_error("Zero diagonal during back substitution");
-            
-            x[i] = (b[i] - sum) / diag;
-        }
-        
-        return x;
-    }
-
 public:
     MutableArraySequence<T> Solve(const SquareMatrix<T>& A, const MutableArraySequence<T>& b) const override {
         size_t n = A.GetSize();
