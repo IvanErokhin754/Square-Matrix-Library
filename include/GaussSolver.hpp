@@ -9,22 +9,22 @@
 template<typename T>
 class GaussSolver : public LinearSystemSolver<T> {
 public:
-    MutableArraySequence<T> Solve(const SquareMatrix<T>& A, const MutableArraySequence<T>& b) const override {
+    Vector<T> Solve(const SquareMatrix<T>& A, const Vector<T>& b) const override {
         size_t n = A.GetSize();
         if (n == 0)
             throw std::invalid_argument("Matrix must not be empty");
 
-        if (b.GetLength() != n)
+        if (b.GetSize() != n)
             throw std::invalid_argument("Wrong right-hand side size");
         
         SquareMatrix<T> tempA(A);
-        MutableArraySequence<T> tempB(b);
+        Vector<T> tempB(b);
 
         for (size_t k = 0; k < n - 1; k++) {
             size_t pivotRow = k;
 
             for (size_t i = k + 1; i < n; i++) {
-                if (std::fabs(static_cast<double>(tempA(i, k))) > std::fabs(static_cast<double>(tempA(pivotRow, k)))) {
+                if (std::fabs(static_cast<double>(tempA(i, k))) > std::fabs(static_cast<double>(tempA(pivotRow, k)))) { // static_cast<double> в концепты, отдельно передавать как метод шаблона
                     pivotRow = i; 
                 }
             }

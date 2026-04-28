@@ -67,7 +67,7 @@ namespace {
         std::cout << "16) Multiply column in matrix A by scalar\n";
         std::cout << "17) Add row multiple in matrix A\n";
         std::cout << "18) Add column multiple in matrix A\n";
-        std::cout << "0) Exit\n";
+        std::cout << "0) Exit\n"; // добавить парсер с .csv excel для работы с большими матрицами
     }
 
     void PrintMatrix(const SquareMatrix<double>& matrix) {

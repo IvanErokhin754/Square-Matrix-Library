@@ -37,18 +37,18 @@ private:
         }
     }
 
-    MutableArraySequence<T> LUSolve(const SquareMatrix<T>& A, const MutableArraySequence<T>& b) const {
+    Vector<T> LUSolve(const SquareMatrix<T>& A, const Vector<T>& b) const {
         SquareMatrix<T> L, U;
         LUDecomposition(A, L, U);
 
-        MutableArraySequence<T> y = ForwardSubstitution(L, b);
-        MutableArraySequence<T> x = BackSubstitution(U, y);
+        Vector<T> y = ForwardSubstitution(L, b);
+        Vector<T> x = BackSubstitution(U, y);
 
         return x;
     }
 
 public: 
-    MutableArraySequence<T> Solve(const SquareMatrix<T>& A, const MutableArraySequence<T>& b) const override {
+    Vector<T> Solve(const SquareMatrix<T>& A, const Vector<T>& b) const override {
         return LUSolve(A, b);
     }
 

@@ -15,7 +15,7 @@ TEST(SquareMatrixTest, AddWorksCorrectly) {
     b.Set(1, 0, 30);
     b.Set(1, 1, 40);
 
-    SquareMatrix<int> result = a.Add(b);
+    SquareMatrix<int> result = a.Add(b);  
     EXPECT_EQ(result.Get(0, 0), 11);
     EXPECT_EQ(result.Get(0, 1), 22);
     EXPECT_EQ(result.Get(1, 0), 33);
@@ -26,7 +26,7 @@ TEST(SquareMatrixTest, AddThrowsWhenSizesDoNotMatch) {
     SquareMatrix<int> a(2, 1);
     SquareMatrix<int> b(3, 1);
 
-    EXPECT_THROW(a.Add(b), std::invalid_argument);
+    EXPECT_THROW(a + b, std::invalid_argument);
 }
 
 TEST(SquareMatrixTest, MultiplyByScalarWorksCorrectly) {
@@ -221,8 +221,11 @@ TEST(SquareMatrixTest, IteratorWorksCorrectly) {
     matrix.Set(1, 1, 4);
 
     int sum = 0;
-    for (const auto& value : matrix) {
-        sum += value;
+    for (size_t i = 0; i < matrix.GetSize(); i++) {
+        for (size_t j = 0; j < matrix.GetSize(); j++) {
+            sum += matrix(i, j);
+        }
+        
     }
 
     EXPECT_EQ(sum, 10);

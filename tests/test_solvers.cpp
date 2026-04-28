@@ -5,10 +5,11 @@
 #include "GaussSolver.hpp"
 #include "LUSolver.hpp"
 #include "Utility.hpp"
+#include "PartialOrdering.hpp"
 
 TEST(GaussSolverTest, SolvesSimple2x2System) {
     SquareMatrix<double> A(2, 0.0);
-    MutableArraySequence<double> b;
+    Vector<double> b;
 
     b.Append(5.0);
     b.Append(7.0);
@@ -17,7 +18,7 @@ TEST(GaussSolverTest, SolvesSimple2x2System) {
     A(1, 0) = 1.0; A(1, 1) = 3.0;
 
     GaussSolver<double> solver;
-    MutableArraySequence<double> x = solver.Solve(A, b);
+    Vector<double> x = solver.Solve(A, b);
 
     EXPECT_NEAR(x[0], 1.6, 1e-9);
     EXPECT_NEAR(x[1], 1.8, 1e-9);
@@ -25,7 +26,7 @@ TEST(GaussSolverTest, SolvesSimple2x2System) {
 
 TEST(LUSolverTest, SolvesSimple2x2System) {
     SquareMatrix<double> A(2, 0.0);
-    MutableArraySequence<double> b;
+    Vector<double> b;
 
     b.Append(5.0);
     b.Append(7.0);
@@ -34,7 +35,7 @@ TEST(LUSolverTest, SolvesSimple2x2System) {
     A(1, 0) = 1.0; A(1, 1) = 3.0;
 
     LUSolver<double> solver;
-    MutableArraySequence<double> x = solver.Solve(A, b);
+    Vector<double> x = solver.Solve(A, b);
 
     EXPECT_NEAR(x[0], 1.6, 1e-9);
     EXPECT_NEAR(x[1], 1.8, 1e-9);
@@ -42,7 +43,7 @@ TEST(LUSolverTest, SolvesSimple2x2System) {
 
 TEST(SolverComparisonTest, GaussAndLUGiveSameResult) {
     SquareMatrix<double> A(3, 0.0);
-    MutableArraySequence<double> b;
+    Vector<double> b;
     
     A(0, 0) = 2.0; A(0, 1) = 1.0; A(0, 2) = -1.0;
     A(1, 0) = -3.0; A(1, 1) = -1.0; A(1, 2) = 2.0;
@@ -69,7 +70,7 @@ TEST(SolverComparisonTest, GaussAndLUGiveSameResult) {
 
 TEST(SolverTest, SingularMatrixThrows) {
     SquareMatrix<double> A(2, 0.0);
-    MutableArraySequence<double> b;
+    Vector<double> b;
 
     A(0, 0) = 1; A(0, 1) = 2;
     A(1, 0) = 2; A(1, 1) = 4;
@@ -86,7 +87,7 @@ TEST(SolverTest, SingularMatrixThrows) {
 
 TEST(SolverTest, WrongSizeThrows) {
     SquareMatrix<double> A(2, 0.0);
-    MutableArraySequence<double> b;
+    Vector<double> b;
 
     b.Append(1.0);
 
@@ -97,7 +98,7 @@ TEST(SolverTest, WrongSizeThrows) {
 
 TEST(SolverTest, ResidualIsSmall) {
     SquareMatrix<double> A(3, 0.0);
-    MutableArraySequence<double> b;
+    Vector<double> b;
 
     A(0, 0) = 2; A(0, 1) = 1; A(0, 2) = -1;
     A(1, 0) = -3; A(1, 1) = -1; A(1, 2) = 2;
@@ -113,3 +114,24 @@ TEST(SolverTest, ResidualIsSmall) {
 
     EXPECT_NEAR(r, 0.0, 1e-9);
 }
+
+TEST(PartialOrderingTest, BuildTransitiveClosure) {
+    PartialOrdering<int> order;
+
+    order.AddPair(1, 2);
+    order.AddPair(2, 3);
+
+    order.BuildTransitiveClosure();
+
+    EXPECT_TRUE(order.IsLessOrEqual(1, 1));
+    EXPECT_TRUE(order.IsLessOrEqual(2, 2));
+    EXPECT_TRUE(order.IsLessOrEqual(3, 3));
+
+    EXPECT_TRUE(order.IsLessOrEqual(1, 2));
+    EXPECT_TRUE(order.IsLessOrEqual(2, 3));
+    EXPECT_TRUE(order.IsLessOrEqual(1, 3));
+
+    EXPECT_FALSE(order.IsLessOrEqual(3, 1));
+}
+// сравнить производительности
+

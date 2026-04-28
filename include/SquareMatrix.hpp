@@ -247,23 +247,6 @@ public:
         }
         return result;
     }
- 
-    //iterator
-    auto begin() {
-        return data.begin();
-    }
-
-    auto end() {
-        return data.end();
-    }
-
-    auto begin() const {
-        return data.begin();
-    }
-
-    auto end() const {
-        return data.end();
-    }
 };
 
 #endif /* SQUARE_MATRIX_HPP */

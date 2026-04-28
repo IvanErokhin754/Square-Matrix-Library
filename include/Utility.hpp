@@ -9,16 +9,16 @@
 static constexpr double eps = 1e-12;
 
 template<typename T>
-MutableArraySequence<T> ForwardSubstitution(const SquareMatrix<T>& L, const MutableArraySequence<T>& b) {
+Vector<T> ForwardSubstitution(const SquareMatrix<T>& L, const Vector<T>& b) {
     size_t n = L.GetSize();
 
     if (n == 0)
         throw std::invalid_argument("Matrix must not be empty");
 
-    if (b.GetLength() != n)
+    if (b.GetSize() != n)
         throw std::invalid_argument("Wrong right-hand side size!");
     
-    MutableArraySequence<T> y;
+    Vector<T> y;
 
     for (size_t i = 0; i < n; i++) {
         y.Append(T());
@@ -43,15 +43,15 @@ MutableArraySequence<T> ForwardSubstitution(const SquareMatrix<T>& L, const Muta
 }
 
 template<typename T>
-MutableArraySequence<T> BackSubstitution(const SquareMatrix<T>& U, const MutableArraySequence<T>& b) {
+Vector<T> BackSubstitution(const SquareMatrix<T>& U, const Vector<T>& b) {
     size_t n = U.GetSize();
     if (n == 0)
         throw std::invalid_argument("Matrix must not be empty");
 
-    if (b.GetLength() != n)
+    if (b.GetSize() != n)
         throw std::invalid_argument("Wrong right-hand side size");
     
-    MutableArraySequence<T> x;
+    Vector<T> x;
     for (size_t i = 0; i < n; i++) {
         x.Append(T());
     } 
@@ -75,7 +75,7 @@ MutableArraySequence<T> BackSubstitution(const SquareMatrix<T>& U, const Mutable
 }
 
 template<typename T>
-T ResidualNorm(const SquareMatrix<T>& A, const MutableArraySequence<T>& x, const MutableArraySequence<T>& b) {
+T ResidualNorm(const SquareMatrix<T>& A, const Vector<T>& x, const Vector<T>& b) {
     size_t n = A.GetSize();
     T norm = T();
 
