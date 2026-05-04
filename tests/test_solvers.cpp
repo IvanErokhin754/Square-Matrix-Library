@@ -133,5 +133,4 @@ TEST(PartialOrderingTest, BuildTransitiveClosure) {
 
     EXPECT_FALSE(order.IsLessOrEqual(3, 1));
 }
-// сравнить производительности
 

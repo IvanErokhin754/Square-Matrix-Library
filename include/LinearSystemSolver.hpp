@@ -15,6 +15,4 @@ public:
     virtual ~LinearSystemSolver() = default;
 };
 
-
-
 #endif /* LINEAR_SYSTEM_SOLVER_HPP */

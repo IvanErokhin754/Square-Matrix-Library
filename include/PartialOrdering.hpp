@@ -111,5 +111,4 @@ public:
     }
 };
 
-
 #endif /* PARTIAL_ORDERING_HPP */
